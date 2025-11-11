@@ -10,4 +10,6 @@ postRoutes.get("/", postControllers.getPosts);
 // @route       GET /api/posts/id
 // @description Get a single post
 // @access      Public
+postRoutes.get("/:postId", postControllers.getPost);
+
 module.exports = postRoutes;
