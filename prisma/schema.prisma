@@ -40,15 +40,15 @@ model Posts {
   updatedAt DateTime?  @updatedAt
   published Boolean?   @default(false)
   comments  Comments[]
-  user      Users      @relation(fields: [userId], references: [id])
+  user      Users      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
 }
 
 model Comments {
   id      Int    @id @default(autoincrement())
   comment String @db.Text
-  user    Users  @relation(fields: [userId], references: [id])
+  user    Users  @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  Int    @unique
-  posts   Posts  @relation(fields: [postsId], references: [id])
+  posts   Posts  @relation(fields: [postsId], references: [id], onDelete: Cascade)
   postsId Int
 }

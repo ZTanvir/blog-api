@@ -27,8 +27,12 @@ const getPosts = async (req, res, next) => {
 };
 
 const getPost = async (req, res, next) => {
-  const { postId } = req.params;
   try {
+    const postId = Number(req.params.postId);
+    if (isNaN(postId)) {
+      res.status(400);
+      throw new Error("Invalid post id.");
+    }
     const posts = await postQueries.getPost(postId);
     res.status(200).json(posts);
   } catch (error) {
@@ -40,9 +44,10 @@ const getPost = async (req, res, next) => {
 const createPost = async (req, res, next) => {
   const result = validationResult(req);
   if (result.isEmpty()) {
-    let { title, excerpt, content, tag, userId } = req.body;
-    userId = Number(userId);
     try {
+      let { title, excerpt, content, tag, userId } = req.body;
+      userId = Number(userId);
+
       const newPost = await postQueries.createPost(
         title,
         excerpt,
@@ -54,8 +59,46 @@ const createPost = async (req, res, next) => {
     } catch (error) {
       next(error);
     }
+  } else {
+    res.status(400).json({ errors: result.array() });
   }
-  res.status(400).json({ errors: result.array() });
 };
 
-module.exports = { getPosts, getPost, createPost, validateCreatePost };
+const editPost = async (req, res, next) => {
+  const result = validationResult(req);
+  if (result.isEmpty()) {
+    try {
+      const postId = Number(req.params.postId);
+      if (isNaN(postId)) {
+        res.status(400);
+        throw new Error("Invalid post id.");
+      }
+
+      const { title, excerpt, content, tag, userId } = req.body;
+      updatedUserId = Number(userId);
+
+      const newPost = await postQueries.updatePost(
+        title,
+        excerpt,
+        content,
+        tag,
+        updatedUserId,
+        postId
+      );
+
+      return res.status(201).json(newPost);
+    } catch (error) {
+      next(error);
+    }
+  } else {
+    res.status(400).json({ errors: result.array() });
+  }
+};
+
+module.exports = {
+  getPosts,
+  getPost,
+  createPost,
+  editPost,
+  validateCreatePost,
+};

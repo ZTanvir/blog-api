@@ -22,4 +22,13 @@ postRoutes.post(
   postControllers.createPost
 );
 
+// @route          PUT /api/posts/id
+// @description    Edit a post
+// @access         Private (User have to logged in)
+postRoutes.put(
+  "/:postId",
+  postControllers.validateCreatePost,
+  postControllers.editPost
+);
+
 module.exports = postRoutes;

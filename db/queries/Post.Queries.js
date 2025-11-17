@@ -32,4 +32,20 @@ const createPost = async (title, excerpt, content, tag, userId) => {
   return newPost;
 };
 
-module.exports = { getPosts, getPost, createPost };
+const updatePost = async (title, excerpt, content, tag, userId, postId) => {
+  const newPost = await prisma.posts.update({
+    where: {
+      id: postId,
+    },
+    data: {
+      title,
+      excerpt,
+      content,
+      tag,
+      userId,
+    },
+  });
+  return newPost;
+};
+
+module.exports = { getPosts, getPost, createPost, updatePost };
