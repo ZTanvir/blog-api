@@ -83,6 +83,11 @@ const editPost = async (req, res, next) => {
       const { title, excerpt, content, tag, userId } = req.body;
       updatedUserId = Number(userId);
 
+      const post = await postQueries.findPostById(postId);
+      if (!post) {
+        throw new Error("Post not found.");
+      }
+
       const newPost = await postQueries.updatePost(
         title,
         excerpt,
