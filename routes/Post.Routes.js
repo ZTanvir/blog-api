@@ -12,4 +12,14 @@ postRoutes.get("/", postControllers.getPosts);
 // @access      Public
 postRoutes.get("/:postId", postControllers.getPost);
 
+// @route       POST /api/posts
+// @description Create a new post
+// @access      Private(User have to logged in)
+
+postRoutes.post(
+  "/",
+  postControllers.validateCreatePost,
+  postControllers.createPost
+);
+
 module.exports = postRoutes;

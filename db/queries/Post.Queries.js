@@ -19,4 +19,17 @@ const getPost = async (postId) => {
   return post;
 };
 
-module.exports = { getPosts, getPost };
+const createPost = async (title, excerpt, content, tag, userId) => {
+  const newPost = await prisma.posts.create({
+    data: {
+      title,
+      excerpt,
+      content,
+      tag,
+      userId,
+    },
+  });
+  return newPost;
+};
+
+module.exports = { getPosts, getPost, createPost };

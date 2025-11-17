@@ -5,9 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider     = "prisma-client"
-  output       = "../generated/prisma"
-  moduleFormat = "cjs"
+  provider = "prisma-client"
+  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -42,7 +41,7 @@ model Posts {
   published Boolean?   @default(false)
   comments  Comments[]
   user      Users      @relation(fields: [userId], references: [id])
-  userId    Int        @unique
+  userId    Int
 }
 
 model Comments {
@@ -51,5 +50,5 @@ model Comments {
   user    Users  @relation(fields: [userId], references: [id])
   userId  Int    @unique
   posts   Posts  @relation(fields: [postsId], references: [id])
-  postsId Int    @unique
+  postsId Int
 }

@@ -4,6 +4,8 @@ require("dotenv").config();
 const errorHandler = require("./middleware/errorHandler");
 const postRoutes = require("./routes/Post.Routes");
 
+app.use(express.json());
+
 app.get("/", async (req, res, next) => {
   res.status(200).json({ message: "Server is running" });
 });
