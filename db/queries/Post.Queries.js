@@ -48,4 +48,29 @@ const updatePost = async (title, excerpt, content, tag, userId, postId) => {
   return newPost;
 };
 
-module.exports = { getPosts, getPost, createPost, updatePost };
+const deletePost = async (postId) => {
+  const deletePost = await prisma.posts.delete({
+    where: {
+      id: postId,
+    },
+  });
+  return deletePost;
+};
+
+const findPostById = async (postId) => {
+  const post = await prisma.posts.findUnique({
+    where: {
+      id: postId,
+    },
+  });
+  return post;
+};
+
+module.exports = {
+  getPosts,
+  getPost,
+  createPost,
+  updatePost,
+  deletePost,
+  findPostById,
+};

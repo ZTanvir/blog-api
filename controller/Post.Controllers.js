@@ -101,10 +101,32 @@ const editPost = async (req, res, next) => {
   }
 };
 
+const deletePost = async (req, res, next) => {
+  try {
+    const postId = Number(req.params.postId);
+    if (isNaN(postId)) {
+      res.status(400);
+      throw new Error("Invalid post id.");
+    }
+
+    const post = await postQueries.findPostById(postId);
+    if (!post) {
+      res.status(404);
+      throw new Error("Post not found.");
+    }
+
+    await postQueries.deletePost(post.id);
+    res.status(204).json({ message: "post delete successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getPosts,
   getPost,
   createPost,
   editPost,
+  deletePost,
   validateCreatePost,
 };
