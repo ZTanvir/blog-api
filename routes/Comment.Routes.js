@@ -7,4 +7,13 @@ const commentController = require("../controller/Comment.Controllers");
 
 commentRouter.get("/post/:postId", commentController.getAllComments);
 
+// @route       POST /api/comments/post/:postId
+// @description Add comments to a post
+// @access      Private (Only authenticated user can add comment to post)
+commentRouter.post(
+  "/post/:postId",
+  commentController.verifyComment,
+  commentController.addComment
+);
+
 module.exports = commentRouter;

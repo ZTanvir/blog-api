@@ -18,4 +18,15 @@ const findPostById = async (postId) => {
   return post;
 };
 
-module.exports = { getCommentsByPostId, findPostById };
+const addComment = async (comment, userId, postId) => {
+  const newComment = await prisma.comments.create({
+    data: {
+      comment,
+      userId,
+      postsId: postId,
+    },
+  });
+  return newComment;
+};
+
+module.exports = { getCommentsByPostId, findPostById, addComment };
