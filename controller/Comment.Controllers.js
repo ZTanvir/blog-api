@@ -69,4 +69,38 @@ const addComment = async (req, res, next) => {
   }
 };
 
-module.exports = { getAllComments, addComment, verifyComment };
+const deleteComment = async (req, res, next) => {
+  try {
+    const userId = 1; //todo update when authentication added
+    const postId = Number(req.params.postId);
+    if (isNaN(postId)) {
+      res.status(401);
+      throw new Error("Invalid post id.");
+    }
+
+    const post = await commentQueries.findPostById(postId);
+    if (!post) {
+      res.status(404);
+      throw new Error("Post not found.");
+    }
+
+    const commentId = Number(req.params.commentId);
+    if (isNaN(commentId)) {
+      res.status(401);
+      throw new Error("Invalid comment id.");
+    }
+    const comment = await commentQueries.findCommentById(commentId);
+    if (!comment) {
+      res.status(404);
+      throw new Error("Comment not found.");
+    }
+
+    await commentQueries.deleteComment(commentId, userId, postId);
+    res.status(204).send();
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+module.exports = { getAllComments, addComment, deleteComment, verifyComment };

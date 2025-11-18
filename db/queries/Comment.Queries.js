@@ -29,4 +29,29 @@ const addComment = async (comment, userId, postId) => {
   return newComment;
 };
 
-module.exports = { getCommentsByPostId, findPostById, addComment };
+const findCommentById = async (commentId) => {
+  const comment = await prisma.comments.findUnique({
+    where: {
+      id: commentId,
+    },
+  });
+  return comment;
+};
+
+const deleteComment = async (commentId, userId, postId) => {
+  await prisma.comments.delete({
+    where: {
+      id: commentId,
+      userId,
+      postsId: postId,
+    },
+  });
+};
+
+module.exports = {
+  getCommentsByPostId,
+  findPostById,
+  addComment,
+  findCommentById,
+  deleteComment,
+};

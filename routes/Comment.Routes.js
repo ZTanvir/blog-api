@@ -9,11 +9,19 @@ commentRouter.get("/post/:postId", commentController.getAllComments);
 
 // @route       POST /api/comments/post/:postId
 // @description Add comments to a post
-// @access      Private (Only authenticated user can add comment to post)
+// @access      Private (Only authenticated user can add comment to a post)
 commentRouter.post(
   "/post/:postId",
   commentController.verifyComment,
   commentController.addComment
+);
+
+// @route       Delete /api/comments/post/:postId/comments/:commentId
+// @description Delete a comment
+// @access      Private (User have to be both authenticated and comment owner )
+commentRouter.delete(
+  "/post/:postId/comments/:commentId",
+  commentController.deleteComment
 );
 
 module.exports = commentRouter;

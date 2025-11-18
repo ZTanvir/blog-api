@@ -121,7 +121,7 @@ const deletePost = async (req, res, next) => {
     }
 
     await postQueries.deletePost(post.id);
-    res.status(204).json({ message: "post delete successfully" });
+    res.status(204).send();
   } catch (error) {
     next(error);
   }
