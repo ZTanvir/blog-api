@@ -25,7 +25,6 @@ model Users {
 
 enum Role {
   USER
-  AUTHOR
   ADMIN
 }
 
