@@ -4,6 +4,7 @@ require("dotenv").config();
 const errorHandler = require("./middleware/errorHandler");
 const postRouter = require("./routes/Post.Routes");
 const commentRouter = require("./routes/Comment.Routes");
+const authRouter = require("./routes/Auth.Routes");
 
 app.use(express.json());
 
@@ -12,6 +13,7 @@ app.get("/", async (req, res, next) => {
 });
 app.use("/api/posts", postRouter);
 app.use("/api/comments", commentRouter);
+app.use("/api/auth", authRouter);
 
 app.use(errorHandler);
 
