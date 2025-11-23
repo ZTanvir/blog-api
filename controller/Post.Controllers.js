@@ -27,7 +27,7 @@ const getPosts = async (req, res, next) => {
     const posts = await postQueries.getPosts();
     res.status(200).json(posts);
   } catch (error) {
-    res.stats(404);
+    res.status(404);
     next(error);
   }
 };
@@ -42,7 +42,7 @@ const getPost = async (req, res, next) => {
     const posts = await postQueries.getPost(postId);
     res.status(200).json(posts);
   } catch (error) {
-    res.stats(404);
+    res.status(404);
     next(error);
   }
 };
