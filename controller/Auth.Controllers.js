@@ -3,7 +3,7 @@ const authQueries = require("../db/queries/Auth.Queries");
 const { body, validationResult } = require("express-validator");
 
 const validateRegisterUser = [
-  body("username").notEmpty().withMessage("Username is require."),
+  body("username").notEmpty().withMessage("Username is require.").trim(),
 
   body("email")
     .notEmpty()
@@ -18,13 +18,15 @@ const validateRegisterUser = [
           throw new Error("E-mail already in use.");
         }
       }
-    }),
+    })
+    .trim(),
 
   body("password")
     .notEmpty()
     .withMessage("Password is required.")
     .isLength({ min: 6 })
-    .withMessage("Password must be at least 6 digit long."),
+    .withMessage("Password must be at least 6 digit long.")
+    .trim(),
 
   body("confirmPassword")
     .notEmpty()
@@ -32,7 +34,8 @@ const validateRegisterUser = [
     .custom((value, { req }) => {
       return value === req.body.password;
     })
-    .withMessage("Password and confirm password must be same"),
+    .withMessage("Password and confirm password must be same")
+    .trim(),
 ];
 
 const registerUser = (req, res, next) => {
