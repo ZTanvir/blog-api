@@ -7,6 +7,11 @@ const encryptedPassword = async (password = "") => {
   return hash;
 };
 
+const comparePassword = async (password, hash) => {
+  const isMatch = await bcryptjs.compare(password, hash);
+  return isMatch;
+};
+
 const getJwtSecret = () => {
   const secret = new TextEncoder().encode(process.env.JWT_SECRET);
   return secret;
@@ -24,4 +29,9 @@ const generateJwt = async (payload, expireIn = "5m") => {
   return jwt;
 };
 
-module.exports = { encryptedPassword, getJwtSecret, generateJwt };
+module.exports = {
+  encryptedPassword,
+  comparePassword,
+  getJwtSecret,
+  generateJwt,
+};

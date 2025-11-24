@@ -1,5 +1,9 @@
 const authQueries = require("../db/queries/Auth.Queries");
-const { encryptedPassword, generateJwt } = require("../utils/authUtils");
+const {
+  encryptedPassword,
+  comparePassword,
+  generateJwt,
+} = require("../utils/authUtils");
 
 const { body, validationResult } = require("express-validator");
 
@@ -44,13 +48,36 @@ const validateUserAuthentication = [
     .notEmpty()
     .withMessage("Email is required.")
     .custom(async (value, { req }) => {
-      const email = await authQueries.getUserByEmail(value);
-      if (!email) {
-        throw new Error("Invalid credential.");
+      if (value) {
+        const user = await authQueries.getUserByEmail(value);
+        //  no user with this email
+        if (!user) {
+          throw new Error("Invalid credential.");
+        }
       }
     }),
 
-  body("password").notEmpty().withMessage("Password is required."),
+  body("password")
+    .notEmpty()
+    .withMessage("Password is required.")
+    .custom(async (value, { req }) => {
+      const email = req.body.email;
+      if (!email) {
+        throw new Error("Invalid credential");
+      }
+
+      const user = await authQueries.getUserByEmail(email);
+      if (!user) {
+        throw new Error("Invalid credential");
+      } else {
+        const hashPassword = user.password;
+        const isMatch = await comparePassword(value, hashPassword);
+        // password don't match with store password
+        if (!isMatch) {
+          throw new Error("Invalid credential");
+        }
+      }
+    }),
 ];
 
 const registerUser = async (req, res, next) => {
