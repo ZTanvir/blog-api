@@ -40,7 +40,15 @@ const validateRegisterUser = [
 ];
 
 const validateUserAuthentication = [
-  body("email").notEmpty().withMessage("Email is required."),
+  body("email")
+    .notEmpty()
+    .withMessage("Email is required.")
+    .custom(async (value, { req }) => {
+      const email = await authQueries.getUserByEmail(value);
+      if (!email) {
+        throw new Error("Invalid credential.");
+      }
+    }),
 
   body("password").notEmpty().withMessage("Password is required."),
 ];
