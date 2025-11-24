@@ -176,6 +176,23 @@ const refreshToken = async (req, res, next) => {
   if (!result.isEmpty()) {
     return res.status(401).json({ errors: result.array() });
   }
+  const token = req.cookies?.refreshToken;
+  const { payload } = await verifyJwt(token);
+
+  const userId = payload.userId;
+  const user = await authQueries.getUserById(userId);
+
+  const payloadData = { userId: user.id };
+  const newAccessToken = await generateJwt(payloadData, "1m");
+
+  res.status(200).json({
+    accessToken: newAccessToken,
+    user: {
+      id: user.id,
+      username: user.username,
+      role: user.role,
+    },
+  });
 };
 
 module.exports = {
