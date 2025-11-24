@@ -21,4 +21,10 @@ authRouter.post(
   authController.loginUser
 );
 
+// @route POST  /api/auth/refresh
+// @Description Generate new access token
+// @Access      Private(Needs valid refresh token in cookie)
+
+authRouter.post("/refresh", authController.refreshToken);
+
 module.exports = authRouter;

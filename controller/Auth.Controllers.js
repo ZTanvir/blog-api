@@ -151,9 +151,16 @@ const loginUser = async (req, res, next) => {
   }
 };
 
+const refreshToken = async (req, res, next) => {
+  console.log("I am in refresh token");
+
+  res.json({ msg: "refresh middleware" });
+};
+
 module.exports = {
   registerUser,
   validateRegisterUser,
   loginUser,
   validateUserAuthentication,
+  refreshToken,
 };
