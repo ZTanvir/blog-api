@@ -4,11 +4,11 @@ const { encryptedPassword, generateJwt } = require("../utils/authUtils");
 const { body, validationResult } = require("express-validator");
 
 const validateRegisterUser = [
-  body("username").notEmpty().withMessage("Username is require.").trim(),
+  body("username").notEmpty().withMessage("Username is required.").trim(),
 
   body("email")
     .notEmpty()
-    .withMessage("Email is require.")
+    .withMessage("Email is required.")
     .isEmail()
     .withMessage("Please enter a valid email address.")
     .custom(async (value) => {
@@ -37,6 +37,12 @@ const validateRegisterUser = [
     })
     .withMessage("Password and confirm password must be same")
     .trim(),
+];
+
+const validateUserAuthentication = [
+  body("email").notEmpty().withMessage("Email is required."),
+
+  body("password").notEmpty().withMessage("Password is required."),
 ];
 
 const registerUser = async (req, res, next) => {
@@ -76,4 +82,17 @@ const registerUser = async (req, res, next) => {
   }
 };
 
-module.exports = { registerUser, validateRegisterUser };
+const loginUser = async (req, res, next) => {
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    return res.status(401).json({ errors: result.array() });
+  }
+  return res.status(200).json({ message: "Successful" });
+};
+
+module.exports = {
+  registerUser,
+  validateRegisterUser,
+  loginUser,
+  validateUserAuthentication,
+};
