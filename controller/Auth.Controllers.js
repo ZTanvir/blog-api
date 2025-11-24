@@ -3,9 +3,10 @@ const {
   encryptedPassword,
   comparePassword,
   generateJwt,
+  verifyJwt,
 } = require("../utils/authUtils");
 
-const { body, validationResult } = require("express-validator");
+const { body, cookie, validationResult } = require("express-validator");
 
 const validateRegisterUser = [
   body("username").notEmpty().withMessage("Username is required.").trim(),
@@ -76,6 +77,25 @@ const validateUserAuthentication = [
         if (!isMatch) {
           throw new Error("Invalid credential");
         }
+      }
+    }),
+];
+
+const validateRefreshToken = [
+  cookie("refreshToken")
+    .exists()
+    .withMessage("No refresh token")
+    .custom(async (value, { req }) => {
+      const token = value;
+      // throw a error automatically ,when token is invalid
+      // "msg": "signature verification failed",
+      const { payload } = await verifyJwt(token);
+
+      const userId = payload.userId;
+      const user = await authQueries.getUserById(userId);
+      //  The user has the cookies, but the user account has been deleted.
+      if (!user) {
+        throw new Error("User not found");
       }
     }),
 ];
@@ -152,9 +172,10 @@ const loginUser = async (req, res, next) => {
 };
 
 const refreshToken = async (req, res, next) => {
-  console.log("I am in refresh token");
-
-  res.json({ msg: "refresh middleware" });
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    return res.status(401).json({ errors: result.array() });
+  }
 };
 
 module.exports = {
@@ -163,4 +184,5 @@ module.exports = {
   loginUser,
   validateUserAuthentication,
   refreshToken,
+  validateRefreshToken,
 };

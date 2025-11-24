@@ -1,4 +1,5 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const app = express();
 require("dotenv").config();
 const errorHandler = require("./middleware/errorHandler");
@@ -7,6 +8,7 @@ const commentRouter = require("./routes/Comment.Routes");
 const authRouter = require("./routes/Auth.Routes");
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.get("/", async (req, res, next) => {
   res.status(200).json({ message: "Server is running" });

@@ -29,9 +29,16 @@ const generateJwt = async (payload, expireIn = "5m") => {
   return jwt;
 };
 
+const verifyJwt = async (jwt) => {
+  const secret = getJwtSecret();
+  const { payload } = await jose.jwtVerify(jwt, secret);
+  return { payload };
+};
+
 module.exports = {
   encryptedPassword,
   comparePassword,
   getJwtSecret,
   generateJwt,
+  verifyJwt,
 };
