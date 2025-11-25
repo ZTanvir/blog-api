@@ -126,6 +126,12 @@ const deletePost = async (req, res, next) => {
       res.status(404);
       throw new Error("Post not found.");
     }
+    const userId = req.user?.id;
+
+    if (post.userId !== userId) {
+      res.status(401);
+      throw new Error("Permission denied .User are not the owner of the post.");
+    }
 
     await postQueries.deletePost(post.id);
     res.status(204).send();

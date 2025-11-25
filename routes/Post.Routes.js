@@ -37,6 +37,6 @@ postRouter.put(
 // @route       DELETE /api/posts/id
 // @description Delete a post
 // @access      Private (User have to logged in)
-postRouter.delete("/:postId", postControllers.deletePost);
+postRouter.delete("/:postId", authMiddleware, postControllers.deletePost);
 
 module.exports = postRouter;
