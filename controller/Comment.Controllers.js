@@ -71,7 +71,7 @@ const addComment = async (req, res, next) => {
 
 const deleteComment = async (req, res, next) => {
   try {
-    const userId = 1; //todo update when authentication added
+    const userId = req.user?.id;
     const postId = Number(req.params.postId);
     if (isNaN(postId)) {
       res.status(401);

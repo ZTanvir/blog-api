@@ -23,6 +23,7 @@ commentRouter.post(
 // @access      Private (User have to be both authenticated and comment owner )
 commentRouter.delete(
   "/post/:postId/comments/:commentId",
+  authMiddleware,
   commentController.deleteComment
 );
 
