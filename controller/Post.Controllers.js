@@ -51,8 +51,8 @@ const createPost = async (req, res, next) => {
   const result = validationResult(req);
   if (result.isEmpty()) {
     try {
-      let { title, excerpt, content, tag, userId } = req.body;
-      userId = Number(userId);
+      let { title, excerpt, content, tag } = req.body;
+      const userId = req.user?.id;
 
       const newPost = await postQueries.createPost(
         title,
@@ -80,8 +80,8 @@ const editPost = async (req, res, next) => {
         throw new Error("Invalid post id.");
       }
 
-      const { title, excerpt, content, tag, userId } = req.body;
-      updatedUserId = Number(userId);
+      const { title, excerpt, content, tag } = req.body;
+      const userId = req.user?.id;
 
       const post = await postQueries.findPostById(postId);
       if (!post) {
@@ -93,7 +93,7 @@ const editPost = async (req, res, next) => {
         excerpt,
         content,
         tag,
-        updatedUserId,
+        userId,
         postId
       );
 

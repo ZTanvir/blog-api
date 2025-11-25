@@ -1,5 +1,6 @@
 const express = require("express");
 const postRouter = express.Router();
+const { authMiddleware } = require("../middleware/authMiddleware");
 const postControllers = require("../controller/Post.Controllers");
 
 // @route       GET /api/posts
@@ -18,6 +19,7 @@ postRouter.get("/:postId", postControllers.getPost);
 
 postRouter.post(
   "/",
+  authMiddleware,
   postControllers.validateCreatePost,
   postControllers.createPost
 );

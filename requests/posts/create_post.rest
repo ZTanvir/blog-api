@@ -5,6 +5,5 @@ content-type: application/json
     "title": "sample",
     "excerpt": "Wed, 21 Oct 2015 18:27:50 GMT",
     "content":"Content",
-    "tag":["nodejs","python"],
-    "userId":1
+    "tag":["nodejs","python"]
 }
