@@ -36,11 +36,11 @@ const getAllComments = async (req, res, next) => {
 
 const addComment = async (req, res, next) => {
   const result = validationResult(req);
-  console.log("result", result);
+
   if (result.isEmpty()) {
     try {
       const comment = req.body.comment;
-      const userId = 1; //todo change when add user auth
+      const userId = req.user?.id; //todo change when add user auth
       const postId = Number(req.params.postId);
       if (isNaN(postId)) {
         res.status(401);

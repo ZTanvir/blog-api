@@ -1,5 +1,6 @@
 const express = require("express");
 const commentRouter = express.Router();
+const { authMiddleware } = require("../middleware/authMiddleware");
 const commentController = require("../controller/Comment.Controllers");
 // @route GET   /api/comments/post/:postId
 // @description Get all comments of a post
@@ -12,6 +13,7 @@ commentRouter.get("/post/:postId", commentController.getAllComments);
 // @access      Private (Only authenticated user can add comment to a post)
 commentRouter.post(
   "/post/:postId",
+  authMiddleware,
   commentController.verifyComment,
   commentController.addComment
 );
