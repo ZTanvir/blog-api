@@ -38,11 +38,10 @@ const findCommentById = async (commentId) => {
   return comment;
 };
 
-const deleteComment = async (commentId, userId, postId) => {
+const deleteComment = async (commentId, postId) => {
   await prisma.comments.delete({
     where: {
       id: commentId,
-      userId,
       postsId: postId,
     },
   });

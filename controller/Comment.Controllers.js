@@ -94,14 +94,18 @@ const deleteComment = async (req, res, next) => {
       res.status(404);
       throw new Error("Comment not found.");
     }
-
-    if (userId !== post.userId || userId !== comment.userId) {
-      res.status(401);
-      throw new Error(
-        "Permission denied.User must be the owner of the comment"
-      );
+    // check user is the creator of the post
+    if (userId !== post.userId) {
+      // check user is the creator of the comment
+      if (userId !== comment.userId) {
+        res.status(401);
+        throw new Error(
+          "Permission denied.User must be the owner of the comment"
+        );
+      }
     }
-    await commentQueries.deleteComment(commentId, userId, postId);
+
+    await commentQueries.deleteComment(commentId, postId);
     res.status(204).send();
   } catch (error) {
     console.log(error);
