@@ -88,6 +88,13 @@ const editPost = async (req, res, next) => {
         throw new Error("Post not found.");
       }
 
+      if (post.userId !== userId) {
+        res.status(401);
+        throw new Error(
+          "Permission denied .User are not the owner of the post."
+        );
+      }
+
       const newPost = await postQueries.updatePost(
         title,
         excerpt,
