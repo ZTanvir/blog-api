@@ -29,6 +29,7 @@ postRouter.post(
 // @access         Private (User have to logged in)
 postRouter.put(
   "/:postId",
+  authMiddleware,
   postControllers.validateCreatePost,
   postControllers.editPost
 );
