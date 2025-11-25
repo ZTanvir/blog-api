@@ -95,7 +95,7 @@ const deleteComment = async (req, res, next) => {
       throw new Error("Comment not found.");
     }
 
-    if (userId !== comment.userId) {
+    if (userId !== post.userId || userId !== comment.userId) {
       res.status(401);
       throw new Error(
         "Permission denied.User must be the owner of the comment"
