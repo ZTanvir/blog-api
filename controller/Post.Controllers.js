@@ -2,23 +2,23 @@ const postQueries = require("../db/queries/Post.Queries");
 const { body, validationResult } = require("express-validator");
 
 const validateCreatePost = [
-  body("title").notEmpty().withMessage("Title is required.").trim().escape(),
+  body("title").trim().notEmpty().withMessage("Title is required.").escape(),
   body("excerpt")
     .notEmpty()
     .withMessage("Excerpt is required.")
     .trim()
     .escape(),
   body("content")
+    .trim()
     .notEmpty()
     .withMessage("Content is required.")
-    .trim()
     .escape(),
   body("tag")
+    .trim()
     .notEmpty()
     .withMessage("Tag is required.")
     .isArray()
     .withMessage("Invalid tag format")
-    .trim()
     .escape(),
 ];
 

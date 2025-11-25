@@ -3,11 +3,11 @@ const { body, validationResult } = require("express-validator");
 
 const verifyComment = [
   body("comment")
+    .trim()
     .notEmpty()
     .withMessage("Comment is required")
     .isLength({ min: 20, max: 1500 })
     .withMessage("Comment must be between 20 and 1500 character long")
-    .trim()
     .escape(),
 ];
 

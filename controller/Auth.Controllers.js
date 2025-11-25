@@ -9,9 +9,13 @@ const {
 const { body, cookie, validationResult } = require("express-validator");
 
 const validateRegisterUser = [
-  body("username").notEmpty().withMessage("Username is required.").trim(),
-
+  body("username")
+    .trim()
+    .notEmpty()
+    .withMessage("Username is required.")
+    .escape(),
   body("email")
+    .trim()
     .notEmpty()
     .withMessage("Email is required.")
     .isEmail()
@@ -25,27 +29,30 @@ const validateRegisterUser = [
         }
       }
     })
-    .trim(),
+    .escape(),
 
   body("password")
+    .trim()
     .notEmpty()
     .withMessage("Password is required.")
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 digit long.")
-    .trim(),
+    .escape(),
 
   body("confirmPassword")
+    .trim()
     .notEmpty()
     .withMessage("Confirm password is required.")
     .custom((value, { req }) => {
       return value === req.body.password;
     })
     .withMessage("Password and confirm password must be same")
-    .trim(),
+    .escape(),
 ];
 
 const validateUserAuthentication = [
   body("email")
+    .trim()
     .notEmpty()
     .withMessage("Email is required.")
     .custom(async (value, { req }) => {
@@ -56,9 +63,11 @@ const validateUserAuthentication = [
           throw new Error("Invalid credential.");
         }
       }
-    }),
+    })
+    .escape(),
 
   body("password")
+    .trim()
     .notEmpty()
     .withMessage("Password is required.")
     .custom(async (value, { req }) => {
@@ -78,7 +87,8 @@ const validateUserAuthentication = [
           throw new Error("Invalid credential");
         }
       }
-    }),
+    })
+    .escape(),
 ];
 
 const validateRefreshToken = [
