@@ -104,9 +104,20 @@ const deleteComment = async (req, res, next) => {
         );
       }
     }
-
-    await commentQueries.deleteComment(commentId, postId);
-    res.status(204).send();
+    if (userId === post.userId) {
+      // delete by post owner
+      // postId and userId must be match with post table id and userId
+      await commentQueries.deleteCommentByPostOwner(commentId, userId, postId);
+    } else if (userId === comment.userId) {
+      // delete by comment owner
+      // commentId,userId,postId must match with comment table id,postId,userId
+      await commentQueries.deleteCommentByCommentOwner(
+        commentId,
+        userId,
+        postId
+      );
+    }
+    res.status(204).end();
   } catch (error) {
     console.log(error);
     next(error);

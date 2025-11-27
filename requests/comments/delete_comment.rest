@@ -1,1 +1,1 @@
-DELETE http://localhost:8000/api/comments/post/14/comments/3 HTTP/1.1
+DELETE http://localhost:8000/api/comments/post/17/comments/1 HTTP/1.1

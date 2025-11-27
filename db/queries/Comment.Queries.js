@@ -38,11 +38,32 @@ const findCommentById = async (commentId) => {
   return comment;
 };
 
-const deleteComment = async (commentId, postId) => {
+const deleteCommentByCommentOwner = async (commentId, userId, postId) => {
   await prisma.comments.delete({
     where: {
       id: commentId,
       postsId: postId,
+      userId,
+    },
+  });
+};
+
+const deleteCommentByPostOwner = async (commentId, userId, postId) => {
+  await prisma.comments.delete({
+    where: {
+      id: commentId,
+      posts: {
+        id: postId,
+        userId,
+      },
+    },
+    include: {
+      posts: {
+        select: {
+          id: true,
+          userId: true,
+        },
+      },
     },
   });
 };
@@ -52,5 +73,6 @@ module.exports = {
   findPostById,
   addComment,
   findCommentById,
-  deleteComment,
+  deleteCommentByCommentOwner,
+  deleteCommentByPostOwner,
 };
