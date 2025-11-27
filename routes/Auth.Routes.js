@@ -31,4 +31,10 @@ authRouter.post(
   authController.refreshToken
 );
 
+// @route     POST /api/auth/logout
+// @describe  Clear refresh token from cookies
+// @Access    Private
+
+authRouter.post("/logout", authController.logoutUser);
+
 module.exports = authRouter;

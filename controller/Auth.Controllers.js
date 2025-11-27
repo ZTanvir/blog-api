@@ -205,6 +205,16 @@ const refreshToken = async (req, res, next) => {
   });
 };
 
+const logoutUser = async (req, res, next) => {
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  });
+  res.status(200).json({ message: "Logged out successfully." });
+};
+
 module.exports = {
   registerUser,
   validateRegisterUser,
@@ -212,4 +222,5 @@ module.exports = {
   validateUserAuthentication,
   refreshToken,
   validateRefreshToken,
+  logoutUser,
 };
