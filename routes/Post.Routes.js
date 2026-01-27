@@ -8,12 +8,12 @@ const postControllers = require("../controller/Post.Controllers");
 // @access      Public
 postRouter.get("/", postControllers.getPosts);
 
-// @route       GET /api/posts/id
+// @route       GET /api/posts
 // @description Get a single post
 // @access      Public
 postRouter.get("/:postId", postControllers.getPost);
 
-// @route       POST /api/posts
+// @route       POST /api/posts/id
 // @description Create a new post
 // @access      Private(User have to logged in)
 

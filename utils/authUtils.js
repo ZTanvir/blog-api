@@ -17,7 +17,7 @@ const getJwtSecret = () => {
   return secret;
 };
 
-const generateJwt = async (payload, expireIn = "5m") => {
+const generateJwt = async (payload, expireIn = "1m") => {
   const secret = getJwtSecret();
 
   const jwt = await new jose.SignJWT(payload)

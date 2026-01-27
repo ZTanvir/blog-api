@@ -53,11 +53,7 @@ const addComment = async (req, res, next) => {
         throw new Error("Post not found.");
       }
 
-      const newComment = await commentQueries.addComment(
-        comment,
-        userId,
-        postId
-      );
+      await commentQueries.addComment(comment, userId, postId);
 
       res.status(201).json({ message: "Comment added successfully." });
     } catch (error) {
@@ -100,7 +96,7 @@ const deleteComment = async (req, res, next) => {
       if (userId !== comment.userId) {
         res.status(401);
         throw new Error(
-          "Permission denied.User must be the owner of the comment"
+          "Permission denied.User must be the owner of the comment",
         );
       }
     }
@@ -114,7 +110,7 @@ const deleteComment = async (req, res, next) => {
       await commentQueries.deleteCommentByCommentOwner(
         commentId,
         userId,
-        postId
+        postId,
       );
     }
     res.status(204).end();

@@ -5,6 +5,13 @@ const getCommentsByPostId = async (postId) => {
     where: {
       postsId: postId,
     },
+    include: {
+      user: {
+        select: {
+          username: true,
+        },
+      },
+    },
   });
   return comments;
 };

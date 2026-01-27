@@ -24,6 +24,13 @@ const validateCreatePost = [
 
 const getPosts = async (req, res, next) => {
   try {
+    const { sort, order, limit } = req.query;
+
+    if (sort && order && limit) {
+      const posts = await postQueries.sortPostByDate(Number(limit), order);
+      return res.status(200).json(posts);
+    }
+
     const posts = await postQueries.getPosts();
     res.status(200).json(posts);
   } catch (error) {

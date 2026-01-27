@@ -3,7 +3,16 @@ const prisma = require("../../config/dbClient");
 const getPosts = async () => {
   const posts = await prisma.posts.findMany({
     where: {
-      published: true,
+      published: false,
+    },
+
+    include: {
+      user: {
+        select: {
+          username: true,
+          role: true,
+        },
+      },
     },
   });
   return posts;
@@ -13,7 +22,15 @@ const getPost = async (postId) => {
   const post = await prisma.posts.findUnique({
     where: {
       id: postId,
-      published: true,
+      published: false,
+    },
+    include: {
+      user: {
+        select: {
+          username: true,
+          role: true,
+        },
+      },
     },
   });
   return post;
@@ -66,6 +83,29 @@ const findPostById = async (postId) => {
   return post;
 };
 
+const sortPostByDate = async (limit = 6, order = "desc" | "asc") => {
+  const latestPost = await prisma.posts.findMany({
+    take: limit,
+    where: {
+      published: false,
+    },
+    orderBy: [
+      {
+        createdAt: order,
+      },
+    ],
+    include: {
+      user: {
+        select: {
+          username: true,
+          role: true,
+        },
+      },
+    },
+  });
+  return latestPost;
+};
+
 module.exports = {
   getPosts,
   getPost,
@@ -73,4 +113,5 @@ module.exports = {
   updatePost,
   deletePost,
   findPostById,
+  sortPostByDate,
 };
