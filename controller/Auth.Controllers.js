@@ -116,9 +116,14 @@ const registerUser = async (req, res, next) => {
     return res.status(400).json({ errors: result.array() });
   }
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, isAuthor } = req.body;
     const hashPassword = await encryptedPassword(password);
-    const user = await authQueries.createUser(username, email, hashPassword);
+    const user = await authQueries.createUser(
+      username,
+      email,
+      hashPassword,
+      isAuthor,
+    );
 
     // Create token
     const payload = { userId: user.id };

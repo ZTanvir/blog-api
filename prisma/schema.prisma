@@ -26,6 +26,7 @@ model Users {
 enum Role {
   USER
   ADMIN
+  AUTHOR
 }
 
 model Posts {
