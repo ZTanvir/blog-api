@@ -91,6 +91,51 @@ const validateUserAuthentication = [
     .escape(),
 ];
 
+const validateAuthorAuthentication = [
+  body("email")
+    .trim()
+    .notEmpty()
+    .withMessage("Email is required.")
+    .custom(async (value, { req }) => {
+      if (value) {
+        const user = await authQueries.getUserByEmail(value);
+        //  no user with this email
+        if (!user) {
+          throw new Error("Invalid credential.");
+        }
+      }
+    })
+    .escape(),
+
+  body("password")
+    .trim()
+    .notEmpty()
+    .withMessage("Password is required.")
+    .custom(async (value, { req }) => {
+      const email = req.body.email;
+      if (!email) {
+        throw new Error("Invalid credential");
+      }
+
+      const user = await authQueries.getUserByEmail(email);
+      if (!user) {
+        throw new Error("Invalid credential");
+      } else {
+        const hashPassword = user.password;
+        const isMatch = await comparePassword(value, hashPassword);
+        // password don't match with store password
+        if (!isMatch) {
+          throw new Error("Invalid credential");
+        }
+        const role = user.role;
+        if (role !== "AUTHOR") {
+          throw new Error("Author access only");
+        }
+      }
+    })
+    .escape(),
+];
+
 const validateRefreshToken = [
   cookie("refreshToken")
     .exists()
@@ -186,6 +231,41 @@ const loginUser = async (req, res, next) => {
   }
 };
 
+const loginAuthor = async (req, res, next) => {
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    return res.status(401).json({ errors: result.array() });
+  }
+  const email = req.body.email;
+
+  try {
+    const user = await authQueries.getUserByEmail(email);
+    const payload = { userId: user.id };
+
+    const accessToken = await generateJwt(payload, "1m");
+    const refreshToken = await generateJwt(payload, "30d");
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    });
+
+    res.status(200).json({
+      accessToken,
+      user: {
+        id: user.id,
+        username: user.username,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 const refreshToken = async (req, res, next) => {
   const result = validationResult(req);
   if (!result.isEmpty()) {
@@ -224,8 +304,10 @@ module.exports = {
   registerUser,
   validateRegisterUser,
   loginUser,
+  loginAuthor,
   validateUserAuthentication,
   refreshToken,
   validateRefreshToken,
+  validateAuthorAuthentication,
   logoutUser,
 };

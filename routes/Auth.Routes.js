@@ -8,7 +8,7 @@ const authController = require("../controller/Auth.Controllers");
 authRouter.post(
   "/register",
   authController.validateRegisterUser,
-  authController.registerUser
+  authController.registerUser,
 );
 
 // @route POST  /api/auth/login
@@ -18,7 +18,17 @@ authRouter.post(
 authRouter.post(
   "/login",
   authController.validateUserAuthentication,
-  authController.loginUser
+  authController.loginUser,
+);
+
+// @route POST  /api/auth/login
+// @Description Authenticate user
+// @Access      Public
+
+authRouter.post(
+  "/author/login",
+  authController.validateAuthorAuthentication,
+  authController.loginUser,
 );
 
 // @route POST  /api/auth/refresh
@@ -28,7 +38,7 @@ authRouter.post(
 authRouter.post(
   "/refresh",
   authController.validateRefreshToken,
-  authController.refreshToken
+  authController.refreshToken,
 );
 
 // @route     POST /api/auth/logout
