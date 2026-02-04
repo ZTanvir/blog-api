@@ -18,6 +18,20 @@ const getPosts = async () => {
   return posts;
 };
 
+const getUserPosts = async (userId) => {
+  const posts = await prisma.posts.findMany({
+    where: {
+      userId,
+    },
+    select: {
+      title: true,
+      published: true,
+    },
+  });
+
+  return posts;
+};
+
 const getPost = async (postId) => {
   const post = await prisma.posts.findUnique({
     where: {
@@ -114,4 +128,5 @@ module.exports = {
   deletePost,
   findPostById,
   sortPostByDate,
+  getUserPosts,
 };

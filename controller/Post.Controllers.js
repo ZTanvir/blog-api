@@ -39,6 +39,23 @@ const getPosts = async (req, res, next) => {
   }
 };
 
+const getUserPosts = async (req, res, next) => {
+  try {
+    const { status } = req.query;
+    const { userId } = req.params;
+    if (status === "all") {
+      const posts = await postQueries.getUserPosts(Number(userId));
+      return res.status(200).json(posts);
+    } else if (status == "published") {
+    } else if (status == "unpublish") {
+    }
+    return res.status(200).json([]);
+  } catch (error) {
+    res.status(404);
+    next(error);
+  }
+};
+
 const getPost = async (req, res, next) => {
   try {
     const postId = Number(req.params.postId);
@@ -66,7 +83,7 @@ const createPost = async (req, res, next) => {
         excerpt,
         content,
         tag,
-        userId
+        userId,
       );
       return res.status(201).json(newPost);
     } catch (error) {
@@ -98,7 +115,7 @@ const editPost = async (req, res, next) => {
       if (post.userId !== userId) {
         res.status(401);
         throw new Error(
-          "Permission denied .User are not the owner of the post."
+          "Permission denied .User are not the owner of the post.",
         );
       }
 
@@ -108,7 +125,7 @@ const editPost = async (req, res, next) => {
         content,
         tag,
         userId,
-        postId
+        postId,
       );
 
       return res.status(201).json(newPost);
@@ -149,6 +166,7 @@ const deletePost = async (req, res, next) => {
 
 module.exports = {
   getPosts,
+  getUserPosts,
   getPost,
   createPost,
   editPost,

@@ -8,12 +8,19 @@ const postControllers = require("../controller/Post.Controllers");
 // @access      Public
 postRouter.get("/", postControllers.getPosts);
 
-// @route       GET /api/posts
+// @route       GET /api/posts/user/10?status="all"
+/* @description Get all posts
+   @status      all,published,unpublished
+ */
+// @access      Public
+postRouter.get("/user/:userId", postControllers.getUserPosts);
+
+// @route       GET /api/posts/10
 // @description Get a single post
 // @access      Public
 postRouter.get("/:postId", postControllers.getPost);
 
-// @route       POST /api/posts/id
+// @route       POST /api/posts
 // @description Create a new post
 // @access      Private(User have to logged in)
 
@@ -21,7 +28,7 @@ postRouter.post(
   "/",
   authMiddleware,
   postControllers.validateCreatePost,
-  postControllers.createPost
+  postControllers.createPost,
 );
 
 // @route          PUT /api/posts/id
@@ -31,7 +38,7 @@ postRouter.put(
   "/:postId",
   authMiddleware,
   postControllers.validateCreatePost,
-  postControllers.editPost
+  postControllers.editPost,
 );
 
 // @route       DELETE /api/posts/id

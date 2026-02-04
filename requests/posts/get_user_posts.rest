@@ -1,0 +1,1 @@
+GET http://localhost:8000/api/posts/user/5?status=all HTTP/1.1
