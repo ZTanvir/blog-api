@@ -49,7 +49,9 @@ const getUserPosts = async (req, res, next) => {
     } else if (status == "published") {
       const posts = await postQueries.getPublishUserPosts(Number(userId));
       return res.status(200).json(posts);
-    } else if (status == "unpublish") {
+    } else if (status == "unpublished") {
+      const posts = await postQueries.getUnpublishUserPosts(Number(userId));
+      return res.status(200).json(posts);
     }
     return res.status(200).json([]);
   } catch (error) {

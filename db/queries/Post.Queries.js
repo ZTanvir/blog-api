@@ -47,6 +47,21 @@ const getPublishUserPosts = async (userId) => {
   return posts;
 };
 
+const getUnpublishUserPosts = async (userId) => {
+  const posts = await prisma.posts.findMany({
+    where: {
+      userId,
+      published: false,
+    },
+    select: {
+      title: true,
+      published: true,
+    },
+  });
+
+  return posts;
+};
+
 const getPost = async (postId) => {
   const post = await prisma.posts.findUnique({
     where: {
@@ -145,4 +160,5 @@ module.exports = {
   sortPostByDate,
   getAllUserPosts,
   getPublishUserPosts,
+  getUnpublishUserPosts,
 };

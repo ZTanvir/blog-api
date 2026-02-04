@@ -1,1 +1,1 @@
-GET http://localhost:8000/api/posts/user/18?status=all HTTP/1.1
+GET http://localhost:8000/api/posts/user/18?status=unpublished HTTP/1.1
