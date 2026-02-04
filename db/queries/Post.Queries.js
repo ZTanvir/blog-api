@@ -18,10 +18,25 @@ const getPosts = async () => {
   return posts;
 };
 
-const getUserPosts = async (userId) => {
+const getAllUserPosts = async (userId) => {
   const posts = await prisma.posts.findMany({
     where: {
       userId,
+    },
+    select: {
+      title: true,
+      published: true,
+    },
+  });
+
+  return posts;
+};
+
+const getPublishUserPosts = async (userId) => {
+  const posts = await prisma.posts.findMany({
+    where: {
+      userId,
+      published: true,
     },
     select: {
       title: true,
@@ -128,5 +143,6 @@ module.exports = {
   deletePost,
   findPostById,
   sortPostByDate,
-  getUserPosts,
+  getAllUserPosts,
+  getPublishUserPosts,
 };

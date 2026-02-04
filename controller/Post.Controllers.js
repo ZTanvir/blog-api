@@ -44,9 +44,11 @@ const getUserPosts = async (req, res, next) => {
     const { status } = req.query;
     const { userId } = req.params;
     if (status === "all") {
-      const posts = await postQueries.getUserPosts(Number(userId));
+      const posts = await postQueries.getAllUserPosts(Number(userId));
       return res.status(200).json(posts);
     } else if (status == "published") {
+      const posts = await postQueries.getPublishUserPosts(Number(userId));
+      return res.status(200).json(posts);
     } else if (status == "unpublish") {
     }
     return res.status(200).json([]);
