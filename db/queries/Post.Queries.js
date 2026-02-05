@@ -23,11 +23,6 @@ const getAllUserPosts = async (userId) => {
     where: {
       userId,
     },
-    select: {
-      id: true,
-      title: true,
-      published: true,
-    },
   });
 
   return posts;
@@ -37,11 +32,6 @@ const getPublishUserPosts = async (userId) => {
   const posts = await prisma.posts.findMany({
     where: {
       userId,
-      published: true,
-    },
-    select: {
-      id: true,
-      title: true,
       published: true,
     },
   });
@@ -54,11 +44,6 @@ const getUnpublishUserPosts = async (userId) => {
     where: {
       userId,
       published: false,
-    },
-    select: {
-      id: true,
-      title: true,
-      published: true,
     },
   });
 
@@ -83,7 +68,14 @@ const getPost = async (postId) => {
   return post;
 };
 
-const createPost = async (title, excerpt, content, tag, userId) => {
+const createPost = async (
+  title,
+  excerpt,
+  content,
+  tag,
+  userId,
+  published = false,
+) => {
   const newPost = await prisma.posts.create({
     data: {
       title,
@@ -91,12 +83,21 @@ const createPost = async (title, excerpt, content, tag, userId) => {
       content,
       tag,
       userId,
+      published,
     },
   });
   return newPost;
 };
 
-const updatePost = async (title, excerpt, content, tag, userId, postId) => {
+const updatePost = async (
+  title,
+  excerpt,
+  content,
+  tag,
+  userId,
+  postId,
+  published,
+) => {
   const newPost = await prisma.posts.update({
     where: {
       id: postId,
@@ -107,6 +108,7 @@ const updatePost = async (title, excerpt, content, tag, userId, postId) => {
       content,
       tag,
       userId,
+      published,
     },
   });
   return newPost;

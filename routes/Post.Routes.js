@@ -37,7 +37,7 @@ postRouter.post(
 postRouter.put(
   "/:postId",
   authMiddleware,
-  postControllers.validateCreatePost,
+  postControllers.validateUpdatePost,
   postControllers.editPost,
 );
 

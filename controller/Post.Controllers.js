@@ -22,6 +22,16 @@ const validateCreatePost = [
     .escape(),
 ];
 
+const [validateUpdatePost] = [
+  ...validateCreatePost,
+  body("published")
+    .trim()
+    .notEmpty()
+    .withMessage("Published is required.")
+    .isBoolean()
+    .withMessage("Published value must be boolean"),
+];
+
 const getPosts = async (req, res, next) => {
   try {
     const { sort, order, limit } = req.query;
@@ -108,7 +118,7 @@ const editPost = async (req, res, next) => {
         throw new Error("Invalid post id.");
       }
 
-      const { title, excerpt, content, tag } = req.body;
+      const { title, excerpt, content, tag, published } = req.body;
       const userId = req.user?.id;
 
       const post = await postQueries.findPostById(postId);
@@ -130,6 +140,7 @@ const editPost = async (req, res, next) => {
         tag,
         userId,
         postId,
+        published,
       );
 
       return res.status(201).json(newPost);
@@ -176,4 +187,5 @@ module.exports = {
   editPost,
   deletePost,
   validateCreatePost,
+  validateUpdatePost,
 };
