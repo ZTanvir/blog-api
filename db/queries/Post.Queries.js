@@ -24,6 +24,7 @@ const getAllUserPosts = async (userId) => {
       userId,
     },
     select: {
+      id: true,
       title: true,
       published: true,
     },
@@ -39,6 +40,7 @@ const getPublishUserPosts = async (userId) => {
       published: true,
     },
     select: {
+      id: true,
       title: true,
       published: true,
     },
@@ -54,6 +56,7 @@ const getUnpublishUserPosts = async (userId) => {
       published: false,
     },
     select: {
+      id: true,
       title: true,
       published: true,
     },
