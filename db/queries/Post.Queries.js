@@ -3,7 +3,7 @@ const prisma = require("../../config/dbClient");
 const getPosts = async () => {
   const posts = await prisma.posts.findMany({
     where: {
-      published: false,
+      published: true,
     },
 
     include: {
@@ -22,6 +22,7 @@ const getAllUserPosts = async (userId) => {
   const posts = await prisma.posts.findMany({
     where: {
       userId,
+      published: true,
     },
   });
 
@@ -54,7 +55,7 @@ const getPost = async (postId) => {
   const post = await prisma.posts.findUnique({
     where: {
       id: postId,
-      published: false,
+      published: true,
     },
     include: {
       user: {
@@ -136,7 +137,7 @@ const sortPostByDate = async (limit = 6, order = "desc" | "asc") => {
   const latestPost = await prisma.posts.findMany({
     take: limit,
     where: {
-      published: false,
+      published: true,
     },
     orderBy: [
       {
