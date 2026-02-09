@@ -22,7 +22,6 @@ const getAllUserPosts = async (userId) => {
   const posts = await prisma.posts.findMany({
     where: {
       userId,
-      published: true,
     },
   });
 
