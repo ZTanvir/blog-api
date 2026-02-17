@@ -68,6 +68,23 @@ const getPost = async (postId) => {
   return post;
 };
 
+const getAnyPost = async (postId) => {
+  const post = await prisma.posts.findUnique({
+    where: {
+      id: postId,
+    },
+    include: {
+      user: {
+        select: {
+          username: true,
+          role: true,
+        },
+      },
+    },
+  });
+  return post;
+};
+
 const createPost = async (
   title,
   excerpt,
@@ -158,6 +175,7 @@ const sortPostByDate = async (limit = 6, order = "desc" | "asc") => {
 module.exports = {
   getPosts,
   getPost,
+  getAnyPost,
   createPost,
   updatePost,
   deletePost,

@@ -71,12 +71,19 @@ const getUserPosts = async (req, res, next) => {
 };
 
 const getPost = async (req, res, next) => {
+  const { status } = req.query;
+
   try {
     const postId = Number(req.params.postId);
     if (isNaN(postId)) {
       res.status(400);
       throw new Error("Invalid post id.");
     }
+    if (status) {
+      const post = await postQueries.getAnyPost(postId);
+      return res.status(200).json(post);
+    }
+
     const posts = await postQueries.getPost(postId);
     res.status(200).json(posts);
   } catch (error) {

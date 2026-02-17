@@ -15,8 +15,8 @@ postRouter.get("/", postControllers.getPosts);
 // @access      Public
 postRouter.get("/user/:userId", postControllers.getUserPosts);
 
-// @route       GET /api/posts/10
-// @description Get a single post
+// @route       GET /api/posts/10?status="any"
+// @description Get a single publish post, if any ?status="any" post,whatever the post status
 // @access      Public
 postRouter.get("/:postId", postControllers.getPost);
 
