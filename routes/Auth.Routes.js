@@ -22,7 +22,7 @@ authRouter.post(
 );
 
 // @route POST  /api/auth/login
-// @Description Authenticate user
+// @Description Authenticate user type author
 // @Access      Public
 
 authRouter.post(

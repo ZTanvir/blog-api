@@ -208,9 +208,9 @@ const loginUser = async (req, res, next) => {
     const payload = { userId: user.id };
 
     const accessToken = await generateJwt(payload, "1m");
-    const refreshToken = await generateJwt(payload, "30d");
+    const refreshAuthToken = await generateJwt(payload, "30d");
 
-    res.cookie("refreshToken", refreshToken, {
+    res.cookie("refreshAuthToken", refreshAuthToken, {
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
       secure: process.env.NODE_ENV === "production",
