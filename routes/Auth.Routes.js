@@ -61,6 +61,6 @@ authRouter.post("/logout", authController.logoutUser);
 // @describe  Clear refresh token from cookies
 // @Access    Private
 
-authRouter.post("/logout", authController.logoutAuthor);
+authRouter.post("/author/logout", authController.logoutAuthor);
 
 module.exports = authRouter;
