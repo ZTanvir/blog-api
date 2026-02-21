@@ -46,7 +46,7 @@ authRouter.post(
 // @Access      Private(Needs valid refresh token in cookie)
 
 authRouter.post(
-  "/refresh",
+  "/author/refresh",
   authController.validateAuthorRefreshToken,
   authController.refreshAuthorToken,
 );
