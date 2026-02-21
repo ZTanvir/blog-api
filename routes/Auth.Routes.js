@@ -21,14 +21,14 @@ authRouter.post(
   authController.loginUser,
 );
 
-// @route POST  /api/auth/login
+// @route POST  /api/auth/author/login
 // @Description Authenticate user type author
 // @Access      Public
 
 authRouter.post(
   "/author/login",
   authController.validateAuthorAuthentication,
-  authController.loginUser,
+  authController.loginAuthor,
 );
 
 // @route POST  /api/auth/refresh
@@ -41,10 +41,26 @@ authRouter.post(
   authController.refreshToken,
 );
 
+// @route POST  /api/auth/author/refresh
+// @Description Generate new access token
+// @Access      Private(Needs valid refresh token in cookie)
+
+authRouter.post(
+  "/refresh",
+  authController.validateAuthorRefreshToken,
+  authController.refreshAuthorToken,
+);
+
 // @route     POST /api/auth/logout
 // @describe  Clear refresh token from cookies
 // @Access    Private
 
 authRouter.post("/logout", authController.logoutUser);
+
+// @route     POST /api/auth/author/logout
+// @describe  Clear refresh token from cookies
+// @Access    Private
+
+authRouter.post("/logout", authController.logoutAuthor);
 
 module.exports = authRouter;

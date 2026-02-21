@@ -155,6 +155,25 @@ const validateRefreshToken = [
     }),
 ];
 
+const validateAuthorRefreshToken = [
+  cookie("refreshAuthorToken")
+    .exists()
+    .withMessage("No refresh token")
+    .custom(async (value, { req }) => {
+      const token = value;
+      // throw a error automatically ,when token is invalid
+      // "msg": "signature verification failed",
+      const { payload } = await verifyJwt(token);
+
+      const userId = payload.userId;
+      const user = await authQueries.getUserById(userId);
+      //  The user has the cookies, but the user account has been deleted.
+      if (!user) {
+        throw new Error("User not found");
+      }
+    }),
+];
+
 const registerUser = async (req, res, next) => {
   const result = validationResult(req);
   if (!result.isEmpty()) {
@@ -208,9 +227,43 @@ const loginUser = async (req, res, next) => {
     const payload = { userId: user.id };
 
     const accessToken = await generateJwt(payload, "1m");
-    const refreshAuthToken = await generateJwt(payload, "30d");
+    const refreshToken = await generateJwt(payload, "30d");
 
-    res.cookie("refreshAuthToken", refreshAuthToken, {
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    });
+
+    res.status(200).json({
+      accessToken,
+      user: {
+        id: user.id,
+        username: user.username,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+const loginAuthor = async (req, res, next) => {
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    return res.status(401).json({ errors: result.array() });
+  }
+  const email = req.body.email;
+  try {
+    const user = await authQueries.getUserByEmail(email);
+    const payload = { userId: user.id };
+
+    const accessToken = await generateJwt(payload, "1m");
+    const refreshAuthorToken = await generateJwt(payload, "30d");
+
+    res.cookie("refreshAuthorToken", refreshAuthorToken, {
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
       secure: process.env.NODE_ENV === "production",
@@ -255,8 +308,42 @@ const refreshToken = async (req, res, next) => {
   });
 };
 
+const refreshAuthorToken = async (req, res, next) => {
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    return res.status(401).json({ errors: result.array() });
+  }
+  const token = req.cookies?.refreshAuthorToken;
+  const { payload } = await verifyJwt(token);
+
+  const userId = payload.userId;
+  const user = await authQueries.getUserById(userId);
+
+  const payloadData = { userId: user.id };
+  const newAccessToken = await generateJwt(payloadData, "1m");
+
+  res.status(200).json({
+    accessToken: newAccessToken,
+    user: {
+      id: user.id,
+      username: user.username,
+      role: user.role,
+    },
+  });
+};
+
 const logoutUser = async (req, res, next) => {
   res.clearCookie("refreshToken", {
+    httpOnly: true,
+    maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  });
+  res.status(200).json({ message: "Logged out successfully." });
+};
+
+const logoutAuthor = async (req, res, next) => {
+  res.clearCookie("refreshAuthorToken", {
     httpOnly: true,
     maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
     secure: process.env.NODE_ENV === "production",
@@ -269,9 +356,13 @@ module.exports = {
   registerUser,
   validateRegisterUser,
   loginUser,
+  loginAuthor,
   validateUserAuthentication,
   refreshToken,
+  refreshAuthorToken,
   validateRefreshToken,
+  validateAuthorRefreshToken,
   validateAuthorAuthentication,
   logoutUser,
+  logoutAuthor,
 };
