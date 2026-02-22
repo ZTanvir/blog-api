@@ -5,6 +5,9 @@ const getCommentsByPostId = async (postId) => {
     where: {
       postsId: postId,
     },
+    orderBy: {
+      createdAt: "desc",
+    },
     include: {
       user: {
         select: {
