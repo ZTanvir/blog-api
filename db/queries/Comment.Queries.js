@@ -11,6 +11,7 @@ const getCommentsByPostId = async (postId) => {
     include: {
       user: {
         select: {
+          id: true,
           username: true,
         },
       },
