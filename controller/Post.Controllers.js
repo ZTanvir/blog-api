@@ -35,14 +35,22 @@ const [validateUpdatePost] = [
 const getPosts = async (req, res, next) => {
   try {
     const { sort, order, limit } = req.query;
+    const { page } = req.query;
 
     if (sort && order && limit) {
       const posts = await postQueries.sortPostByDate(Number(limit), order);
       return res.status(200).json(posts);
     }
-
-    const posts = await postQueries.getPosts();
-    res.status(200).json(posts);
+    if (page) {
+      const [posts, totalPost] = await Promise.all([
+        postQueries.getPosts(page),
+        postQueries.totalPosts(),
+      ]);
+      res.status(200).json({
+        posts,
+        totalPost,
+      });
+    }
   } catch (error) {
     res.status(404);
     next(error);

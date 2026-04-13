@@ -1,6 +1,9 @@
 const prisma = require("../../config/dbClient");
 
-const getPosts = async () => {
+const getPosts = async (page) => {
+  const postPerPage = 5;
+  const skip = (page - 1) * postPerPage;
+
   const posts = await prisma.posts.findMany({
     where: {
       published: true,
@@ -14,8 +17,22 @@ const getPosts = async () => {
         },
       },
     },
+    take: postPerPage,
+    skip,
+    orderBy: {
+      createdAt: "desc",
+    },
   });
   return posts;
+};
+
+const totalPosts = async () => {
+  const totalPost = await prisma.posts.count({
+    where: {
+      published: true,
+    },
+  });
+  return totalPost;
 };
 
 const getAllUserPosts = async (userId) => {
@@ -174,6 +191,7 @@ const sortPostByDate = async (limit = 6, order = "desc" | "asc") => {
 
 module.exports = {
   getPosts,
+  totalPosts,
   getPost,
   getAnyPost,
   createPost,
